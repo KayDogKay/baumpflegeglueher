@@ -6,7 +6,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
   // ── DOM-Helfer ────────────────────────────────────────────────────────────
-  const $     = id  => document.getElementById(id);
+  const $       = id  => document.getElementById(id);
   const setText = (id, val) => { const el = $(id); if (el) el.textContent = val; };
   const setAttr = (id, attr, val) => { const el = $(id); if (el) el.setAttribute(attr, val); };
 
@@ -21,15 +21,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const root = document.documentElement.style;
     const f = config.farben || {};
     const varMap = {
-      primaer:      '--color-primaer',
-      primaer_dark: '--color-primaer-dark',
-      akzent:       '--color-akzent',
-      akzent_hover: '--color-akzent-hover',
-      hintergrund:  '--color-bg',
-      text:         '--color-text',
+      primaer:        '--color-primaer',
+      primaer_dark:   '--color-primaer-dark',
+      akzent:         '--color-akzent',
+      akzent_hover:   '--color-akzent-hover',
+      hintergrund:    '--color-bg',
+      text:           '--color-text',
       text_gedaempft: '--color-text-muted',
-      card_bg:      '--color-card-bg',
-      footer_bg:    '--color-footer-bg',
+      card_bg:        '--color-card-bg',
+      footer_bg:      '--color-footer-bg',
     };
     Object.entries(varMap).forEach(([key, prop]) => {
       if (f[key]) root.setProperty(prop, f[key]);
@@ -40,16 +40,39 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 2. STATISCHE SHELL BEFÜLLEN (Header, Hero-Texte, Buttons, Footer)
+  // 2. STATISCHE SHELL BEFÜLLEN
+  //    – Logo-Bild aus logo_url
+  //    – Hero-Hintergrund aus hero_bg
+  //    – Firmennname, Footer-Copyright, CTA-Links
   // ─────────────────────────────────────────────────────────────────────────
   function populateShell(data) {
-    const c = data.config || {};
+    const c    = data.config || {};
     const firm = c.firmenname || '';
 
+    // Firmenname + Seitentitel
     setText('header-firmenname', firm);
     document.title = firm;
     setText('footer-copy', `© ${new Date().getFullYear()} ${firm}`);
 
+    // ── Logo-Bild (logo_url) ────────────────────────────────────────────────
+    const logoImg = $('logo-img');
+    if (logoImg) {
+      if (c.logo_url) {
+        logoImg.src    = c.logo_url;
+        logoImg.alt    = firm;
+        logoImg.hidden = false;
+      }
+      // Kein logo_url → Element bleibt hidden; kein fallback nötig
+    }
+
+    // ── Hero-Hintergrund (hero_bg) ──────────────────────────────────────────
+    // Schlüssel ist hero_bg; legacy-Fallback auf hero_bild falls vorhanden
+    const heroBg = c.hero_bg || c.hero_bild || '';
+    if (heroBg) {
+      HERO_EL.style.backgroundImage = `url('${heroBg}')`;
+    }
+
+    // ── CTA-Links ───────────────────────────────────────────────────────────
     const telLink = c.telefon_link || '#';
     const waLink  = c.whatsapp_nummer
       ? `https://wa.me/${c.whatsapp_nummer}?text=${encodeURIComponent('Hallo, ich interessiere mich für Ihre Baumpflege-Leistungen.')}`
@@ -58,23 +81,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     ['hero-cta-tel', 'sticky-tel'].forEach(id => setAttr(id, 'href', telLink));
     ['hero-cta-wa',  'sticky-wa' ].forEach(id => setAttr(id, 'href', waLink));
 
+    // ── Hero-Texte ──────────────────────────────────────────────────────────
     const home = (data.pages || {}).home || {};
     setText('hero-titel',   home.hero_titel   || '');
     setText('hero-subline', home.hero_subline || '');
-
-    if (c.hero_bild) {
-      HERO_EL.style.backgroundImage = `url('${c.hero_bild}')`;
-    }
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 3. PARALLAX (rAF-gedrosselt, nur auf #home aktiv)
+  // 3. PARALLAX (rAF-gedrosselt)
+  //    Nur auf #home aktiv. background-attachment:fixed absichtlich vermieden
+  //    – iOS Safari ignoriert es auf nicht-body-Elementen vollständig.
   // ─────────────────────────────────────────────────────────────────────────
   let parallaxActive = false;
   let rafPending     = false;
 
   function runParallax() {
     if (parallaxActive && HERO_EL && !HERO_EL.hidden) {
+      // 0.32 = Parallax-Stärke: sanft, nicht ablenkend
       HERO_EL.style.backgroundPositionY = `calc(50% + ${window.scrollY * 0.32}px)`;
     }
     rafPending = false;
@@ -88,7 +111,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   }, { passive: true });
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 4. STICKY-HEADER SCROLL-KLASSE
+  // 4. REVEAL-ON-SCROLL  (IntersectionObserver)
+  //    Wird nach jedem View-Render aufgerufen.
+  //    Alle Elemente mit .reveal-Klasse werden beobachtet.
+  //    Stagger: jedes Element bekommt per JS ein individuelles transition-delay.
+  // ─────────────────────────────────────────────────────────────────────────
+  function initReveal() {
+    const els = VIEWPORT.querySelectorAll('.reveal');
+    if (!els.length) return;
+
+    // Threshold 0.1: Element muss 10 % sichtbar sein bevor es eingeblendet wird
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target); // Einmalig feuern
+      });
+    }, { threshold: 0.1 });
+
+    els.forEach((el, i) => {
+      // Stagger-Delay: max 400 ms damit der letzte Block nicht zu lange wartet
+      el.style.transitionDelay = `${Math.min(i * 0.07, 0.4)}s`;
+      obs.observe(el);
+    });
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 5. STICKY-HEADER SCROLL-KLASSE (IntersectionObserver auf Sentinel)
   // ─────────────────────────────────────────────────────────────────────────
   function setupStickyHeader() {
     const header   = $('site-header');
@@ -102,7 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 5. MOBILE NAV TOGGLE
+  // 6. MOBILE NAV TOGGLE
   // ─────────────────────────────────────────────────────────────────────────
   function setupMobileNav() {
     const toggle = $('nav-toggle');
@@ -123,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 6. ROUTER
+  // 7. ROUTER
   // ─────────────────────────────────────────────────────────────────────────
   const ROUTES = {
     '#home':       renderHome,
@@ -137,10 +186,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const hash   = location.hash || '#home';
     const isHome = hash === '#home';
 
-    // Aktiver Nav-Link
+    // Aktiver Nav-Link markieren
     NAV_LINKS.forEach(a => a.classList.toggle('active', a.getAttribute('href') === hash));
 
-    // Hero ein-/ausblenden + Parallax steuern
+    // Hero ein-/ausblenden + Parallax-Flag steuern
     HERO_EL.hidden = !isHome;
     parallaxActive = isHome;
     if (isHome) HERO_EL.style.backgroundPositionY = 'center';
@@ -151,20 +200,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (nav) nav.classList.remove('open');
     if (tog) tog.setAttribute('aria-expanded', 'false');
 
-    // Viewport-Inhalt austauschen
+    // Viewport zum Seitenanfang + View rendern
     window.scrollTo({ top: 0, behavior: 'instant' });
     (ROUTES[hash] || renderHome)(data);
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 7. VIEW-RENDERER: HOME (Bento-Grid)
+  // 8. VIEW-RENDERER: HOME (Bento-Grid)
   // ─────────────────────────────────────────────────────────────────────────
   function renderHome(data) {
     const p = (data.pages || {}).home;
     if (!p) { VIEWPORT.innerHTML = ''; return; }
 
     const items = (p.leistungen_kurz || []).map((item, i) => `
-      <article class="bento-item bento-item--${i}">
+      <article class="bento-item bento-item--${i} reveal">
         <span class="bento-icon" aria-hidden="true">${escHtml(item.icon || '')}</span>
         <h3>${escHtml(item.titel)}</h3>
         <p>${escHtml(item.kurztext)}</p>
@@ -175,18 +224,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     VIEWPORT.innerHTML = `
       <section class="view-section">
         <div class="container">
-          <h2 class="section-title">Was wir für Sie tun</h2>
+          <h2 class="section-title reveal">Was ich für Sie tue</h2>
           <div class="bento-grid">${items}</div>
-          <div class="section-cta">
+          <div class="section-cta reveal">
             <a href="#leistungen" class="btn btn-outline">Alle Leistungen im Detail →</a>
           </div>
         </div>
       </section>
     `;
+
+    initReveal();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 8. VIEW-RENDERER: ÜBER UNS
+  // 9. VIEW-RENDERER: ÜBER UNS
   // ─────────────────────────────────────────────────────────────────────────
   function renderUeberUns(data) {
     const p = (data.pages || {}).ueber_uns;
@@ -194,7 +245,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const paragraphs = (p.text || '').split('\n\n')
       .filter(Boolean)
-      .map(para => `<p>${escHtml(para).replace(/\n/g, '<br>')}</p>`)
+      .map(para => `<p class="reveal">${escHtml(para).replace(/\n/g, '<br>')}</p>`)
       .join('');
 
     const zerts = (p.zertifikate || [])
@@ -204,11 +255,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     VIEWPORT.innerHTML = `
       <section class="view-section">
         <div class="container">
-          <h2 class="section-title">${escHtml(p.titel || 'Über uns')}</h2>
+          <h2 class="section-title reveal">${escHtml(p.titel || 'Über mich')}</h2>
           <div class="ueber-layout">
             <div class="ueber-text">${paragraphs}</div>
             ${zerts ? `
-              <aside class="ueber-zertifikate" aria-label="Zertifikate und Qualifikationen">
+              <aside class="ueber-zertifikate reveal" aria-label="Zertifikate und Qualifikationen">
                 <h3>Zertifikate &amp; Qualifikationen</h3>
                 <ul class="zertifikat-list">${zerts}</ul>
               </aside>
@@ -217,17 +268,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
       </section>
     `;
+
+    initReveal();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 9. VIEW-RENDERER: LEISTUNGEN DETAIL
+  // 10. VIEW-RENDERER: LEISTUNGEN DETAIL
   // ─────────────────────────────────────────────────────────────────────────
   function renderLeistungen(data) {
     const p = (data.pages || {}).leistungen_detail;
     if (!p || !Array.isArray(p.liste)) { VIEWPORT.innerHTML = ''; return; }
 
     const cards = p.liste.map(item => `
-      <article class="leistung-card">
+      <article class="leistung-card reveal">
         <h3>${escHtml(item.titel)}</h3>
         <p>${escHtml(item.desc)}</p>
       </article>
@@ -236,22 +289,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     VIEWPORT.innerHTML = `
       <section class="view-section">
         <div class="container">
-          <h2 class="section-title">Unsere Leistungen</h2>
+          <h2 class="section-title reveal">Meine Leistungen</h2>
           <div class="leistungen-grid">${cards}</div>
         </div>
       </section>
     `;
+
+    initReveal();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 10. VIEW-RENDERER: GALERIE
+  // 11. VIEW-RENDERER: GALERIE
   // ─────────────────────────────────────────────────────────────────────────
   function renderGalerie(data) {
     const p = (data.pages || {}).galerie;
     if (!p) { VIEWPORT.innerHTML = ''; return; }
 
     const bilder = (p.bilder || []).map(b => `
-      <figure class="galerie-item">
+      <figure class="galerie-item reveal">
         <img
           src="${escHtml(b.src)}"
           alt="${escHtml(b.alt)}"
@@ -266,15 +321,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     VIEWPORT.innerHTML = `
       <section class="view-section">
         <div class="container">
-          <h2 class="section-title">${escHtml(p.titel || 'Galerie')}</h2>
+          <h2 class="section-title reveal">${escHtml(p.titel || 'Galerie')}</h2>
           <div class="galerie-grid">${bilder}</div>
         </div>
       </section>
     `;
+
+    initReveal();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 11. VIEW-RENDERER: RECHTLICHES (Impressum + Datenschutz)
+  // 12. VIEW-RENDERER: RECHTLICHES (Impressum + Datenschutz)
   // ─────────────────────────────────────────────────────────────────────────
   function renderRechtliches(data) {
     const p = (data.pages || {}).rechtliches;
@@ -283,7 +340,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function fmtText(raw) {
       return (raw || '').split('\n\n')
         .filter(Boolean)
-        .map(para => `<p>${escHtml(para).replace(/\n/g, '<br>')}</p>`)
+        .map(para => `<p class="reveal">${escHtml(para).replace(/\n/g, '<br>')}</p>`)
         .join('');
     }
 
@@ -292,21 +349,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="container">
           <div class="rechtliches-container">
             <div class="rechtliches-block">
-              <h2 class="section-title">${escHtml(p.impressum_titel || 'Impressum')}</h2>
+              <h2 class="section-title reveal">${escHtml(p.impressum_titel || 'Impressum')}</h2>
               <div class="rechtliches-text">${fmtText(p.impressum_text)}</div>
             </div>
             <div class="rechtliches-block">
-              <h2 class="section-title">${escHtml(p.datenschutz_titel || 'Datenschutz')}</h2>
+              <h2 class="section-title reveal">${escHtml(p.datenschutz_titel || 'Datenschutz')}</h2>
               <div class="rechtliches-text">${fmtText(p.datenschutz_text)}</div>
             </div>
           </div>
         </div>
       </section>
     `;
+
+    initReveal();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 12. XSS-SCHUTZ: escHtml
+  // 13. XSS-SCHUTZ
   // ─────────────────────────────────────────────────────────────────────────
   function escHtml(str) {
     return String(str ?? '')
@@ -342,7 +401,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         und der Dateiname exakt übereinstimmt.
       </div>
     `;
-    // Alle Shell-Sektionen ausblenden
     ['site-header', 'hero', 'site-footer', 'sticky-bar'].forEach(id => {
       const el = $(id);
       if (el) el.hidden = true;
