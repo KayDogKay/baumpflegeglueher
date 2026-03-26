@@ -1,0 +1,130 @@
+{
+  "config": {
+    "firmenname": "Baumpflege F. Glüher",
+    "slogan": "Verwurzelt in Qualität. Klar in der Arbeit.",
+    "telefon": "+49 361 2 00 00 00",
+    "telefon_link": "tel:+4936120000000",
+    "whatsapp_nummer": "4936120000000",
+    "hero_bild": "image_5a5cc2.jpg",
+    "farben": {
+      "primaer": "#4e5f28",
+      "primaer_dark": "#3a4a1e",
+      "akzent": "#e8820a",
+      "akzent_hover": "#c96e08",
+      "hintergrund": "#f3ede0",
+      "text": "#1e1e1e",
+      "text_gedaempft": "#5a5240",
+      "card_bg": "#ffffff",
+      "footer_bg": "#2b3318"
+    },
+    "schriften": {
+      "haupt": "'Georgia', serif",
+      "ui": "system-ui, -apple-system, sans-serif"
+    }
+  },
+  "pages": {
+    "home": {
+      "hero_titel": "Ihr Baum in sicheren Händen.",
+      "hero_subline": "Professionelle Baumpflege, Kronenpflege und Fällungen im Großraum Erfurt. Zertifiziert. Versichert. Zuverlässig.",
+      "leistungen_kurz": [
+        {
+          "icon": "🌳",
+          "titel": "Baumpflege & Kronenpflege",
+          "kurztext": "Fachmännische Schnitt- und Pflegemaßnahmen nach ZTV Baumpflege für dauerhaften Vitalitätserhalt."
+        },
+        {
+          "icon": "⚡",
+          "titel": "Problembaumfällung",
+          "kurztext": "Gefährliche Bäume in engen Lagen sicher fällen – Stück für Stück per Seilklettertechnik."
+        },
+        {
+          "icon": "🚨",
+          "titel": "Sturmschaden-Notdienst 24/7",
+          "kurztext": "Akute Gefährdungen beseitigen wir an 365 Tagen – schnell, zuverlässig, rund um die Uhr."
+        },
+        {
+          "icon": "🔬",
+          "titel": "Standsicherheitsgutachten",
+          "kurztext": "Fundierte Vitalitätsbeurteilung und Risikobewertung – rechtssicher für Kommunen und Privatbesitzer."
+        },
+        {
+          "icon": "🪵",
+          "titel": "Wurzelstockfräsen",
+          "kurztext": "Stümpfe bodenbündig entfernen – Fläche sofort wieder bepflanzbar und nutzbar machen."
+        },
+        {
+          "icon": "🏡",
+          "titel": "Heckenschnitt & Gehölzpflege",
+          "kurztext": "Formschnitt und Pflege von Hecken und Solitärgehölzen – auf Wunsch als jährlicher Pflegevertrag."
+        }
+      ]
+    },
+    "ueber_uns": {
+      "titel": "Frank Glüher – Der Baum ist sein Handwerk.",
+      "text": "Was 1998 mit einem Transporter, einer Kettensäge und dem festen Willen begann, ehrliche Arbeit zu liefern, ist heute ein etablierter Fachbetrieb mit fünf Mitarbeitern und modernster Seilklettertechnik.\n\nFrank Glüher ist zertifizierter Baumpfleger (European Tree Worker) und bringt über 25 Jahre Berufserfahrung in jeden Einsatz mit. Kein Baum gleicht dem anderen – und das gilt für seine Arbeit genauso.\n\nWir arbeiten ausschließlich mit zertifiziertem Personal, aktuellem Gerät und einem lückenlosen Haftpflichtversicherungsschutz bis 10 Mio. €. Privathaushalte, Kommunen, Unternehmen und Wohnbaugesellschaften im Großraum Erfurt vertrauen uns regelmäßig ihre Bäume an.\n\nUnser Versprechen: Wir kommen, schauen, lösen. Ohne Ausreden.",
+      "zertifikate": [
+        "European Tree Worker (ETW)",
+        "Fachagrarwirt Baumpflege",
+        "Motorsägenlehrgang (FPA § 39a)",
+        "Arbeitssicherheit SKT (DGUV)",
+        "Haftpflichtversicherung 10 Mio. €",
+        "Mitglied: Fachverband Baumpflege e. V."
+      ]
+    },
+    "leistungen_detail": {
+      "liste": [
+        {
+          "titel": "Problembaumfällung",
+          "desc": "Bäume, die in beengten Verhältnissen stehen – nahe an Gebäuden, Stromleitungen oder anderen Hindernissen – erfordern höchste Präzision. Wir arbeiten mit kontrollierter Stück-für-Stück-Abtragung per Seilklettertechnik und gesicherter Abseilung. Sicherheit für Ihr Eigentum und Ihre Umgebung hat dabei oberste Priorität."
+        },
+        {
+          "titel": "Kronenpflege & Baumpflege",
+          "desc": "Regelmäßiger, fachgerechter Schnitt erhält die Vitalität und Standsicherheit Ihrer Bäume über Jahrzehnte. Wir führen Einkürzungen, Auslichtungen, Totholzentnahmen und Formschnitte nach ZTV Baumpflege durch – abgestimmt auf die jeweilige Baumart und Jahreszeit."
+        },
+        {
+          "titel": "Seilklettertechnik (SKT)",
+          "desc": "Moderne Baumpflege kommt ohne schwere Maschinen aus. Unsere ausgebildeten Kletterer arbeiten baumschonend direkt im Kronenbereich. Das schützt Bodenbeschaffenheit, Pflasterung und Wurzelraum – ideal für schutzwürdige Bäume, enge Innenhöfe und befestigte Flächen."
+        },
+        {
+          "titel": "Sturmschaden-Notdienst 24/7",
+          "desc": "Sturmschäden entstehen ohne Vorwarnung und können akute Gefahren für Menschen und Gebäude verursachen. Unser Notfallteam ist rund um die Uhr erreichbar und beseitigt Hängeäste, umgestürzte Bäume und blockierte Zufahrten schnell und zuverlässig – an 365 Tagen im Jahr."
+        },
+        {
+          "titel": "Standsicherheitsgutachten",
+          "desc": "Pflichtaufgabe für Kommunen und Unternehmen, sinnvoller Schutz für jeden Grundstückseigentümer: Ein fundiertes Gutachten dokumentiert den Zustand Ihrer Bäume, erkennt Schäden und Risiken frühzeitig und schützt Sie im Schadensfall rechtlich. Wir erstellen Gutachten nach FLL-Richtlinien."
+        },
+        {
+          "titel": "Wurzelstockfräsen",
+          "desc": "Nach einer Fällung hinterlässt jeder Baum seinen Stumpf. Mit unserer leistungsstarken Fräse entfernen wir Stümpfe bis 30 cm unter Geländeoberkante – schnell, sauber und ohne Aufgrabungen. Die Fläche ist anschließend direkt bepflanzbar oder überbaubar."
+        },
+        {
+          "titel": "Heckenschnitt & Gehölzpflege",
+          "desc": "Formhecken, Thujen, Liguster, Eibe, Buchsbaum – wir schneiden alle Gehölzarten zum biologisch optimalen Zeitpunkt und in der richtigen Intensität. Auf Wunsch schließen wir einen jährlichen Pflegevertrag für wiederkehrende Maßnahmen ab."
+        },
+        {
+          "titel": "Holzentsorgung & Häckseln",
+          "desc": "Das anfallende Schnittgut wird direkt vor Ort gehäckselt oder abtransportiert. Sie entscheiden: Hackschnitzel als hochwertigen Bodenmulch belassen oder vollständige Entsorgung inkl. Stämmen und Ästen. Alles aus einer Hand, kein zweiter Dienstleister nötig."
+        }
+      ]
+    },
+    "galerie": {
+      "titel": "Einblick in unsere Arbeit",
+      "bilder": [
+        { "src": "galerie_1.jpg", "alt": "Kronenpflege an einer alten Eiche" },
+        { "src": "galerie_2.jpg", "alt": "Seilkletterer in der Baumkrone" },
+        { "src": "galerie_3.jpg", "alt": "Kontrollierte Fällung in beengtem Gartenbereich" },
+        { "src": "galerie_4.jpg", "alt": "Wurzelstockfräsen nach Baumfällung" },
+        { "src": "galerie_5.jpg", "alt": "Ergebnis nach Heckenschnitt – Vorher/Nachher" },
+        { "src": "galerie_6.jpg", "alt": "Notfalleinsatz nach Sturmschaden" },
+        { "src": "galerie_7.jpg", "alt": "Totholzentnahme in der Baumkrone" },
+        { "src": "galerie_8.jpg", "alt": "Team Baumpflege F. Glüher im Einsatz" }
+      ]
+    },
+    "rechtliches": {
+      "impressum_titel": "Impressum",
+      "impressum_text": "Angaben gemäß § 5 TMG\n\nBaumpflege F. Glüher\nMusterstraße 12\n99084 Erfurt\n\nInhaber: Frank Glüher\nTelefon: +49 361 2 00 00 00\nE-Mail: info@baumgluehr.de\n\nUmsatzsteuer-Identifikationsnummer gemäß § 27a UStG:\nDE 123 456 789\n\nHandwerkskammer Erfurt\nRegisternummer: HW-ERF-0001234\n\nVerantwortlich für den Inhalt nach § 55 Abs. 2 RStV:\nFrank Glüher, Musterstraße 12, 99084 Erfurt\n\nHaftungshinweis: Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich.",
+      "datenschutz_titel": "Datenschutzerklärung",
+      "datenschutz_text": "1. Datenschutz auf einen Blick\n\nDiese Website erhebt keine personenbezogenen Daten. Es werden keine Cookies gesetzt, kein Tracking durchgeführt und keine Analyse-Dienste Dritter eingebunden.\n\n2. Kontaktaufnahme\n\nBeim Klick auf den WhatsApp-Button wird eine Verbindung zu den Servern von Meta Platforms Ireland Ltd. hergestellt. Es gelten die Datenschutzbestimmungen von WhatsApp (https://www.whatsapp.com/legal/privacy-policy). Beim Anruf über den Telefon-Link wird Ihre Rufnummer an uns übermittelt und dient ausschließlich der Bearbeitung Ihrer Anfrage. Eine Weitergabe an Dritte erfolgt nicht.\n\n3. Verantwortlicher\n\nBaumpflege F. Glüher\nMusterstraße 12, 99084 Erfurt\nE-Mail: info@baumgluehr.de\n\n4. Ihre Rechte\n\nSie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO), Löschung (Art. 17 DSGVO) und Einschränkung der Verarbeitung (Art. 18 DSGVO) Ihrer personenbezogenen Daten. Wenden Sie sich dazu jederzeit an die oben genannte Adresse. Zusätzlich steht Ihnen ein Beschwerderecht bei der zuständigen Datenschutzaufsichtsbehörde zu."
+    }
+  }
+}
