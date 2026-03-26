@@ -14,7 +14,8 @@
     <div class="container header-inner">
 
       <a href="#home" class="logo" aria-label="Zur Startseite">
-        <span class="logo-icon" aria-hidden="true">🌳</span>
+        <!-- Logo-Bild wird per JS aus logo_url befüllt; hidden bis JS es setzt -->
+        <img id="logo-img" src="" alt="" class="logo-img" hidden />
         <span id="header-firmenname">Baumpflege F. Glüher</span>
       </a>
 
@@ -29,12 +30,12 @@
         <span></span>
       </button>
 
+      <!-- Impressum/Rechtliches ist NICHT in der Hauptnavigation – nur im Footer -->
       <nav id="main-nav" aria-label="Hauptnavigation">
         <a href="#home">Start</a>
-        <a href="#ueber-uns">Über uns</a>
+        <a href="#ueber-uns">Über mich</a>
         <a href="#leistungen">Leistungen</a>
         <a href="#galerie">Galerie</a>
-        <a href="#rechtliches">Impressum</a>
       </nav>
 
     </div>
@@ -62,12 +63,13 @@
   <!-- ── App Viewport (dynamisch durch JS befüllt) ─────────────────────────── -->
   <main id="app-viewport" role="main" aria-live="polite" aria-atomic="true"></main>
 
-  <!-- ── Footer ────────────────────────────────────────────────────────────── -->
+  <!-- ── Footer – einziger Ort für Rechtliches ────────────────────────────── -->
   <footer id="site-footer">
     <div class="container footer-inner">
       <p id="footer-copy"></p>
       <nav class="footer-nav" aria-label="Rechtliche Links">
-        <a href="#rechtliches">Impressum &amp; Datenschutz</a>
+        <a href="#rechtliches">Impressum</a>
+        <a href="#rechtliches">Datenschutz</a>
       </nav>
     </div>
   </footer>
