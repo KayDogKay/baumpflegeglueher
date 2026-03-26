@@ -26,14 +26,14 @@
   --spacing-lg:  3rem;
   --spacing-xl:  5rem;
 
-  --max-width:        1040px;
-  --radius:           6px;
-  --radius-lg:        14px;
-  --header-height:    64px;
-  --sticky-h:         64px;
-  --transition:       0.2s ease;
-  --shadow-sm:        0 2px 8px rgba(0,0,0,0.07);
-  --shadow-md:        0 6px 24px rgba(0,0,0,0.13);
+  --max-width:      1040px;
+  --radius:         6px;
+  --radius-lg:      14px;
+  --header-height:  64px;
+  --sticky-h:       64px;
+  --transition:     0.2s ease;
+  --shadow-sm:      0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md:      0 6px 24px rgba(0,0,0,0.13);
 }
 
 /* ── Reset ── */
@@ -49,19 +49,44 @@ body {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  /* Freiraum für Sticky-Bar auf Mobile */
   padding-bottom: var(--sticky-h);
 }
 
 img { display: block; max-width: 100%; height: auto; }
 a   { color: inherit; text-decoration: none; }
 
-/* ── Container ── */
 .container {
   width: 100%;
   max-width: var(--max-width);
   margin-inline: auto;
   padding-inline: var(--spacing-md);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   REVEAL-ON-SCROLL
+   Initialzustand: unsichtbar + leicht nach unten versetzt.
+   JS fügt .visible hinzu sobald das Element den Viewport betritt.
+   ───────────────────────────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  /* transition-delay wird per JS individuell gesetzt (Stagger) */
+  transition: opacity 0.55s ease, transform 0.55s ease;
+  will-change: opacity, transform;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Nutzer, die reduzierte Bewegung bevorzugen: Animation deaktivieren */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -92,13 +117,17 @@ a   { color: inherit; text-decoration: none; }
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   flex-shrink: 0;
 }
 
-.logo-icon {
-  font-size: 1.5rem;
-  line-height: 1;
+/* Logo-Bild: feste Höhe, aspect-ratio auto, kein Stretch */
+.logo-img {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 3px;
+  flex-shrink: 0;
 }
 
 #header-firmenname {
@@ -181,7 +210,6 @@ a   { color: inherit; text-decoration: none; }
     gap: 0;
     border-top: 1px solid rgba(255,255,255,0.1);
     padding: var(--spacing-xs) 0 var(--spacing-sm);
-    /* Verborgen by default */
     transform: translateY(-6px);
     opacity: 0;
     pointer-events: none;
@@ -209,11 +237,11 @@ a   { color: inherit; text-decoration: none; }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   HERO  (Parallax via JS + background-position-y)
+   HERO  (Parallax via JS / rAF + background-position-y)
+   background-attachment:fixed absichtlich NICHT verwendet → iOS-inkompatibel.
    ───────────────────────────────────────────────────────────────────────────── */
 #hero {
   position: relative;
-  /* Fallback-Farbe + Hintergrundbild-Basis; src wird per JS gesetzt */
   background-color: var(--color-primaer-dark);
   background-size: cover;
   background-position: center 50%;
@@ -224,7 +252,6 @@ a   { color: inherit; text-decoration: none; }
   overflow: hidden;
 }
 
-/* Dunkle Überblendung (unabhängig vom background-image) */
 .hero-overlay {
   position: absolute;
   inset: 0;
@@ -330,7 +357,6 @@ a   { color: inherit; text-decoration: none; }
   min-height: 50vh;
 }
 
-/* ── Gemeinsame Section-Struktur ── */
 .view-section {
   padding-block: var(--spacing-lg);
 }
@@ -373,7 +399,6 @@ a   { color: inherit; text-decoration: none; }
     grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: minmax(190px, auto);
   }
-  /* Erste und letzte Karte breiter – klassischer Bento-Rhythmus */
   .bento-item--0 { grid-column: span 2; }
   .bento-item--5 { grid-column: span 2; }
 }
@@ -388,13 +413,22 @@ a   { color: inherit; text-decoration: none; }
   flex-direction: column;
   gap: 0.5rem;
   box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition), transform var(--transition), border-top-color var(--transition);
+  transition: box-shadow var(--transition), transform var(--transition), border-top-color var(--transition),
+              /* reveal-transition wird per JS gesetzt; hier kein Konflikt da .reveal
+                 opacity/transform steuert und .bento-item:hover transform steuert –
+                 sobald .visible gesetzt ist, übernimmt hover problemlos */
+              opacity 0.55s ease;
 }
 
 .bento-item:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-4px);
   border-top-color: var(--color-akzent);
+}
+
+/* Hover-Transform soll .reveal nicht überschreiben bevor visible */
+.bento-item.reveal:not(.visible):hover {
+  transform: translateY(32px); /* reveal-Offset halten */
 }
 
 .bento-icon {
@@ -454,7 +488,6 @@ a   { color: inherit; text-decoration: none; }
   margin-bottom: var(--spacing-md);
 }
 
-/* Erster Absatz: Leitsatz-Stil */
 .ueber-text p:first-child {
   font-family: var(--font-main);
   font-size: clamp(1.1rem, 2.4vw, 1.25rem);
@@ -525,13 +558,18 @@ a   { color: inherit; text-decoration: none; }
   border-radius: var(--radius);
   padding: var(--spacing-md);
   box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition), transform var(--transition), border-left-color var(--transition);
+  transition: box-shadow var(--transition), transform var(--transition), border-left-color var(--transition),
+              opacity 0.55s ease;
 }
 
 .leistung-card:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-3px);
   border-left-color: var(--color-akzent);
+}
+
+.leistung-card.reveal:not(.visible):hover {
+  transform: translateY(32px);
 }
 
 .leistung-card h3 {
@@ -595,7 +633,6 @@ a   { color: inherit; text-decoration: none; }
   transform: translateY(0);
 }
 
-/* Fehler-Platzhalter wenn Bild fehlt */
 .galerie-item.img-error {
   display: flex;
   align-items: center;
@@ -623,8 +660,6 @@ a   { color: inherit; text-decoration: none; }
   gap: var(--spacing-xl);
 }
 
-.rechtliches-block {}
-
 .rechtliches-text {
   max-width: 72ch;
 }
@@ -634,7 +669,6 @@ a   { color: inherit; text-decoration: none; }
   color: var(--color-text-muted);
   line-height: 1.75;
   margin-bottom: var(--spacing-sm);
-  font-family: var(--font-ui);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -663,6 +697,11 @@ a   { color: inherit; text-decoration: none; }
   }
 }
 
+.footer-nav {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
 .footer-nav a {
   color: rgba(255,255,255,0.55);
   font-size: 0.85rem;
@@ -674,7 +713,7 @@ a   { color: inherit; text-decoration: none; }
 .footer-nav a:hover { color: var(--color-akzent); }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   STICKY ACTION BAR  (Mobile Lead-Fokus)
+   STICKY ACTION BAR
    ───────────────────────────────────────────────────────────────────────────── */
 #sticky-bar {
   position: fixed;
@@ -707,10 +746,9 @@ a   { color: inherit; text-decoration: none; }
 .sticky-tel { background-color: var(--color-akzent); }
 .sticky-wa  { background-color: var(--color-wa); }
 
-/* Desktop: Sticky-Bar ausblenden – Buttons im Hero genügen */
 @media (min-width: 700px) {
-  #sticky-bar  { display: none; }
-  body         { padding-bottom: 0; }
+  #sticky-bar { display: none; }
+  body        { padding-bottom: 0; }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
